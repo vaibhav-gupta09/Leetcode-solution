@@ -44,14 +44,13 @@ class Solution
         long curr = 0;
         
         for(int i=0; i<n; ++i){
-            if(unlock[arr[i]]<=curr){
-                unlock[arr[i]] = curr+time[arr[i]-1];
-                curr++;
-            }else{
+             
+             if(unlock[arr[i]]>curr){
                 curr = unlock[arr[i]];
-                unlock[arr[i]] = curr+time[arr[i]-1];
-                curr++;
-            }
+             }
+            
+             unlock[arr[i]] = curr+time[arr[i]-1];
+             curr++;
             
         }
         
