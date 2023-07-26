@@ -45,31 +45,25 @@ class Solution {
     
     public boolean isCycle(int v, ArrayList<ArrayList<Integer>> adj) {
        boolean[]visited = new boolean[v];
-       
+    //   System.out.println(adj);
        for(int i=0; i<v; ++i){
            if(visited[i]==false){
-               if(bfs(adj, visited, i)) return true;
+               if(dfs(adj, visited, i, -1)) return true;
            }
        }
        
        return false;
     }
     
-    public boolean bfs(ArrayList<ArrayList<Integer>> adj, boolean[]visited, int idx){
-        visited[idx] = true;
-        Queue<pair> que = new ArrayDeque<>();
-        que.add(new pair(idx, -1));
-        while(que.size()>0){
-           pair rem = que.remove();
-           
-           for(int nbr: adj.get(rem.curr)){
-               if(nbr == rem.par) continue;
-               if(visited[nbr] == true) return true;
-               visited[nbr] = true;
-               que.add(new pair(nbr, rem.curr));
-           }
-       }
+    public boolean dfs(ArrayList<ArrayList<Integer>> adj, boolean[]visited, int curr, int par){
+        if(visited[curr]==true) return true;
+        visited[curr] = true;
        
+       for(int nbr: adj.get(curr)){
+           if(par == nbr) continue;
+           if (dfs(adj, visited, nbr, curr))
+                return true;
+       }
        return false;
     }
 }
