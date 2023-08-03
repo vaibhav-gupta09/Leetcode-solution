@@ -34,42 +34,54 @@ public class Main{
 // User function Template for Java
 
 class Solution{
-    public static class pair{
-        int curr;
-        int wt;
+    public static class DSU{
+        int[]parent;
+        int[]size;
         
-        pair(int curr, int wt){
-            this.curr = curr;
-            this.wt = wt;
+        DSU(int n){
+            parent = new int[n];
+            size = new int[n];
+            for(int i=0; i<n; ++i){
+                parent[i] = i;
+            }
+        }
+        
+        public boolean union(int x, int y){
+            int px = findPar(x);
+            int py = findPar(y);
+            
+            if(px == py) return false;
+            
+            balanceSize(px, py);
+            
+            return true;
+        }
+        
+        public void balanceSize(int px, int py){
+            if(size[px] < size[py]){
+                parent[px] = py;
+            }else if(size[px] > size[py]){
+                parent[py] = px;
+            }else{
+                parent[px] = py;
+                size[py] += size[px]; 
+            }
+        }
+        
+        public int findPar(int x){
+            if(parent[x] == x) return x;
+            return parent[x] = findPar(parent[x]);
         }
     }
+    
 	static int spanningTree(int v, int e, int edges[][]){
-	    ArrayList<ArrayList<pair>> adj = new ArrayList<>();
-	    PriorityQueue<pair> pq = new PriorityQueue<>((a,b)->(a.wt - b.wt));
-	    for(int i=0; i<v; ++i){
-	        adj.add(new ArrayList<>());
-	    }
-	    
-	    for(int[]edge : edges){
-	        adj.get(edge[0]).add(new pair(edge[1], edge[2]));
-	        adj.get(edge[1]).add(new pair(edge[0], edge[2]));
-	    }
-	    pq.add(new pair(0, 0));
-	    boolean[]visited = new boolean[v];
-	    int cost = 0;
-	    
-	    while(pq.size()>0){
-	        pair rem = pq.remove();
-	        if(visited[rem.curr]) continue;
-	        visited[rem.curr] = true;
-	        cost += rem.wt;
-	        
-	        for(pair p: adj.get(rem.curr)){
-	            if(visited[p.curr]) continue;
-	            pq.add(p);
-	        }
-	    }
-	    
-	    return cost;
+	   Arrays.sort(edges, (a,b)->(a[2] - b[2]));
+	   DSU dsu = new DSU(v);
+	   int cost = 0;
+	   for(int []edge: edges){
+	       if(dsu.union(edge[0], edge[1])) cost += edge[2];
+	   }
+	   
+	   return cost;
 	}
 }
