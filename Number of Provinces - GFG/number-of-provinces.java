@@ -32,28 +32,59 @@ class GFG {
 //User function Template for Java
 
 class Solution {
-    static int numProvinces(ArrayList<ArrayList<Integer>> adj, int v) {
-        boolean []visited = new boolean[v];
-        int count = 0;
+    public static class DSU{
+        int[]parent;
+        int[]size;
         
-        for(int i=0; i<v; ++i){
-            if(visited[i]==false){
-                count++;
-                dfs(adj, i,v,  visited);
+        DSU(int n){
+            parent = new int[n];
+            size = new int[n];
+            for(int i=0; i<n; ++i){
+                parent[i] = i;
             }
         }
         
-        return count;
-    }
-    
-    static void dfs(ArrayList<ArrayList<Integer>> adj, int idx,int v, boolean[]visited){
-        if(visited[idx]) return;
-        
-        visited[idx] = true;
-        
-        for(int i=0; i<v; ++i){
-            if(adj.get(idx).get(i) == 1 && visited[i]==false)
-                dfs(adj, i,v, visited);
+        public void union(int x, int y){
+            int px = findPar(x);
+            int py = findPar(y);
+            
+            if(px == py) return;
+            
+            balanceSize(px, py);
+            
+            return;
         }
+        
+        private void balanceSize(int px, int py){
+            if(size[px] < size[py]){
+                parent[px] = py;
+            }else if(size[px] > size[py]){
+                parent[py] = px;
+            }else{
+                parent[px] = py;
+                size[py] += size[px]; 
+            }
+        }
+        
+        private int findPar(int x){
+            if(parent[x] == x) return x;
+            return parent[x] = findPar(parent[x]);
+        }
+    }
+    static int numProvinces(ArrayList<ArrayList<Integer>> adj, int v) {
+       DSU dsu = new DSU(v);
+       for(int i=0; i<adj.size(); ++i){
+           for(int j=0; j<adj.get(i).size(); j++){
+               if(adj.get(i).get(j) == 1)
+               dsu.union(i, j);
+           }
+       }
+       
+       int count = 0;
+       for(int i=0; i<v; ++i){
+           if(dsu.parent[i] == i) count++;
+       }
+       
+       return count;
     }
 };
