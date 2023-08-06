@@ -32,16 +32,17 @@ public class Main {
 
 class Solution {
     int findMaxSum(int arr[], int n) {
-       int[]come = new int[n];
-       int[]notCome = new int[n];
+       int prevCome = arr[0];
+       int prevNotCome = 0;
        
-       come[0] = arr[0];
        
        for(int i=1; i<n; ++i){
-           come[i] = Math.max(notCome[i-1] + arr[i], come[i-1]);
-           notCome[i] = Math.max(notCome[i-1], come[i-1]);
+           int currCome = Math.max(prevNotCome + arr[i], prevCome);
+           int currNotCome = Math.max(prevNotCome, prevCome);
+           prevCome = currCome;
+           prevNotCome = currNotCome;
        }
        
-       return Math.max(come[n-1], notCome[n-1]);
+       return Math.max(prevCome, prevNotCome);
     }
 }
