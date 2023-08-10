@@ -28,34 +28,29 @@ class GfG
 class Solution
 {
 
-	public int minDifference(int arr[], int n) 
-	{ 
-	   int sum = 0;
-	   for(int val: arr) sum += val;
-	   int[]next = new int[sum+1];
-	   int[]curr = new int[sum+1];
-	   
-	   for(int i=0; i<=sum; ++i) next[i] = Math.abs(sum - 2*i);
-	   
-	   for(int i=n-1; i>=0; --i){
-	       for(int j=0; j<=sum; ++j){
-	           curr[j] = Math.min(next[j], (j+arr[i]<=sum?next[j+arr[i]]:Integer.MAX_VALUE));
-	       }
-	       
-	       next = curr.clone();
-	   }
-	   
-	   return next[0];
-	} 
+	public int minDifference(int arr[], int n){ 
+	    int sum = 0;
+	    for(int val : arr) sum += val;
+	    int[][]dp = new int[n][2*sum+1];
+	    for(int[]d: dp) Arrays.fill(d, -1);
+	    return helper(arr, n, 0, 0, dp);
+	}
 	
-// 	public int helper(int[]arr, int idx, int curr, int sum, int n){
-// 	    if(idx==n){
-// 	        return Math.abs(sum - 2*curr);
-// 	    }
+	public int helper(int[]arr, int n, int sum, int idx, int[][]dp){
+	    if(idx==n){
+	        return Math.abs(sum);
+	    }
+	    int tempSum = dp[0].length + sum -1;
 	    
-// 	    int come = helper(arr, idx+1, curr+arr[idx], sum, n);
-// 	    int notCome = helper(arr, idx+1, curr, sum, n);
+	    if(sum<0){
+	        if(dp[idx][tempSum]!=-1) return dp[idx][tempSum];
+	    }else{
+	        if(dp[idx][sum]!=-1) return dp[idx][sum];
+	    }
+	    int case1 = helper(arr, n, sum-arr[idx], idx+1, dp);
+	    int case2 = helper(arr, n, sum+arr[idx], idx+1, dp);
 	    
-// 	    return Math.min(come, notCome);
-// 	}
+	    if(sum<0) return dp[idx][tempSum]  = Math.min(case1, case2);
+	    return dp[idx][sum] = Math.min(case1, case2);
+	}
 }
