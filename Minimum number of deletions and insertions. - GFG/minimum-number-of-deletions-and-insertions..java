@@ -20,6 +20,8 @@ class GfG
 // } Driver Code Ends
 
 
+
+
 //User function Template for Java
 
 class Solution
@@ -33,7 +35,7 @@ class Solution
                 char chx = s1.charAt(i-1);
                 char chy = s2.charAt(j-1);
                 if(chx==chy)
-                dp[i][j] = Math.max(dp[i-1][j-1]+1, dp[i-1][j]);
+                dp[i][j] = dp[i-1][j-1]+1;
                 else
                 dp[i][j] = Math.max(dp[i][j-1], dp[i-1][j]);
             }
