@@ -4,17 +4,21 @@ import java.util.*;
 
 class RodCutting {
 
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
-        int t = sc.nextInt();
+    public static void main(String args[])throws IOException {
+        BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out=new PrintWriter(System.out);
+        
+        int t = Integer.parseInt(in.readLine().trim());
         while (t-- > 0) {
-            int n = sc.nextInt();
+            int n = Integer.parseInt(in.readLine().trim());
+            String s[]=in.readLine().trim().split(" ");
             int[] arr = new int[n];
-            for (int i = 0; i < n; i++) arr[i] = sc.nextInt();
+            for (int i = 0; i < n; i++) arr[i] = Integer.parseInt(s[i]);
 
             Solution ob = new Solution();
-            System.out.println(ob.cutRod(arr, n));
+            out.println(ob.cutRod(arr, n));
         }
+        out.close();
     }
 }
 
@@ -23,29 +27,14 @@ class RodCutting {
 
 class Solution{
     public int cutRod(int price[], int n) {
-        int []next = new int[n+2];
-        int []curr = new int[n+2];
+        int []dp = new int[n+1];
         
-        
-        for(int i=n; i>=1; --i){
-            for(int j=n; j>=0; --j){
-                int val1 = (j + i <= n) ? curr[j+i] + price[i-1] : 0;
-                int val2 = next[j];
-                
-                curr[j] = Math.max(val1, val2);
+        for(int i=1; i<=n; ++i){
+            for(int j=1; j<=price.length; ++j){
+                if(i-j<0) break;
+                dp[i] = Math.max(dp[i], dp[i-j] + price[j-1]);
             }
-            
-            next = curr.clone();
         }
-        return next[0]; 
-    }
-    
-    public int helper(int[]arr, int idx, int len, int n){
-        if(idx==n+1) return 0;
-        
-        int val1 = (len + idx <= n) ? helper(arr, idx, len+idx, n) + arr[idx-1] : 0;
-        int val2 = helper(arr, idx+1, len, n);
-        
-        return Math.max(val1, val2);
+        return dp[n];
     }
 }
