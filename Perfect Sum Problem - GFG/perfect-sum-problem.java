@@ -26,34 +26,31 @@ class GfG
 
 
 class Solution{
-    public int mod = 1000000007;
-    
-	public int perfectSum(int arr[],int n, int sum) 
-	{ 
-	   int[]next = new int[sum+1];  
-	   int[]curr = new int[sum+1];
-	   next[sum] = 1;
-	   
-	   for(int i=n-1; i>=0; --i){
-	       for(int j=sum; j>=0; --j){
-	           curr[j] =( next[j] + (j+arr[i] <= sum ? next[j+arr[i]]:0))%mod;
-	       }
-	       
-	       next = curr.clone();
-	   }
-	   
-	   return next[0];
-	}
-	
-	public int helper(int[]arr, int n, int sum, int idx, int curr){
-	    if(idx==n){
-	        if(curr==sum) return 1;
-	        else return 0;
-	    }
-	    
-	    int come = helper(arr, n, sum, idx+1, curr + arr[idx]);
-	    int notCome = helper(arr, n, sum, idx+1, curr);
-	    
-	    return (come + notCome)%mod;
-	}
+
+	public int perfectSum(int nums[],int n, int tar) { 
+	   int next[] = new int[tar+1];
+        int curr[] = new int[tar+1];
+
+        int mod = 1000000007;
+        next[0] = 1;
+
+        for(int i=nums.length-1; i>=0; --i){
+            for(int j=0; j<=tar; ++j){
+                if(j-nums[i]<0){
+                    curr[j] = next[j];
+                    continue;
+                }
+
+                int come = next[j-nums[i]];
+                int notCome = next[j];
+                curr[j] = (come + notCome)%mod;
+            }
+
+            int[] temp = next;
+            next = curr;
+            curr = temp;
+        }
+
+        return next[tar];
+    }
 }
