@@ -62,29 +62,40 @@ class pair  {
 
 class Solution {
     
-    public pair indexes(long v[], long x)
-    {
-        int n = v.length;
-        int lo = 0, hi = n-1, mid = 0;
-        
+    public pair indexes(long arr[], long x){
+        int left = findLeft(arr, x);
+        int right = findRight(arr, x);
+        pair p = new pair(left, right);
+        return p;
+    }
+    
+    public int findLeft(long[]arr, long x){
+        int lo = 0, hi = arr.length-1;
+        int st = -1;
         while(lo <= hi){
-            mid = lo + (hi - lo)/2;
-            if(v[mid]==x) break;
-            else if(x<v[mid]) hi = mid-1;
-            else lo = mid+1;
+            int mid = lo + (hi-lo)/2;
+            if(arr[mid]<x){
+                lo = mid+1;
+            }else{
+                if(arr[mid] == x) st = mid;
+                hi = mid-1;
+            }
         }
-        
-        if(v[mid]!=x) return  new pair(-1, -1);;
-        
-        int start = mid, end = mid;
-        while(start>=0 && v[start]==x){
-            start--;
+        return st;
+    }
+    
+    public int findRight(long[]arr, long x){
+        int lo = 0, hi = arr.length-1;
+        int st = -1;
+        while(lo <= hi){
+            int mid = lo + (hi-lo)/2;
+            if(arr[mid]<=x){
+                if(arr[mid] == x) st = mid;
+                lo = mid+1;
+            }else{
+                hi = mid-1;
+            }
         }
-        
-        while(end<n && v[end]==x){
-            end++;
-        }
-        
-        return new pair(start+1, end-1);
+        return st;
     }
 }
