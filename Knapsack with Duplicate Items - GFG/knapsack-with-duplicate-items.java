@@ -30,33 +30,26 @@ class GFG{
 // } Driver Code Ends
 
 
+
+
 //User function Template for Java
 
 class Solution{
-    static int knapSack(int n, int w, int val[], int wt[]){
-        int[]next = new int[w+1];
-        int[]curr = new int[w+1];
-        for(int i=n-1; i>=0; i--){
-            for(int j=w-1; j>=0; --j){
-                int val1 = (j+wt[i]<=w)?curr[j+wt[i]]+val[i]:0;
-                int val2 = next[j];
+    static int knapSack(int n, int wt, int val[], int w[]){
+        int[]curr = new int[wt+1];
+        int[]next = new int[wt+1];
+        
+        for(int i=n-1; i>=0; --i){
+            for(int j=0; j<=wt; ++j){
+                int come = (j-w[i]>=0)?(curr[j-w[i]] + val[i]):0;
+                int notCome = next[j];
                 
-                curr[j] = Math.max(val1, val2);
+                curr[j] = Math.max(come, notCome);
             }
             
             next = curr.clone();
         }
-        return next[0];
-    }
-    
-    static int helper(int n, int idx, int curr, int w, int val[], int[]wt){
-        if(n==idx){
-            return 0;
-        } 
         
-        
-        int val1 = (curr + wt[idx] <=w) ? helper(n, idx, curr+wt[idx], w, val, wt) + val[idx] : 0;
-        int val2 = helper(n, idx+1, curr, w, val, wt);
-        return Math.max(val1, val2);
+        return next[wt];
     }
 }
